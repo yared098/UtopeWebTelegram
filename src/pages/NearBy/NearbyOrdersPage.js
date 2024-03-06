@@ -115,16 +115,15 @@ function NearbyOrdersPage() {
     return distance.toFixed(2); // Return the distance rounded to 2 decimal places
     };
 
-  return (
-    <div className="container">
-      <h2>Nearby Orders</h2>
-
-      {orders.length > 0 ? (
-        <>
-          <ul>
+    return (
+      <div className="container">
+        <h2>Nearby Orders</h2>
+    
+        {orders.length > 0 ? (
+          <>
             {orders.map((order) => (
-              <li className="card" key={order.id}>
-                <p>Order ID: {order.id}</p>
+              <div className="card" key={order.id}>
+                <p>Order ID: {order.to}</p>
                 <p>Receiver address: {order.receiver_address}</p>
                 <p>Sender phone: {order.sender_phone}</p>
                 <p>
@@ -144,21 +143,20 @@ function NearbyOrdersPage() {
                 >
                   Call
                 </button>
-              </li>
+              </div>
             ))}
-          </ul>
-          {!loading && (
-            <button className="load-more-button" onClick={handleLoadMore}>
-              Load More
-            </button>
-          )}
-          {loading && <p>Loading...</p>}
-        </>
-      ) : (
-        <p className="empty-message">No nearby orders available</p>
-      )}
-    </div>
-  );
+            {!loading && (
+              <button className="load-more-button" onClick={handleLoadMore}>
+                Load More
+              </button>
+            )}
+            {loading && <p>Loading...</p>}
+          </>
+        ) : (
+          <p className="empty-message">No nearby orders available</p>
+        )}
+      </div>
+    );
 }
 
 export default NearbyOrdersPage;
