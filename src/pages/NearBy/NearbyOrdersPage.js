@@ -6,6 +6,7 @@ function NearbyOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     const toRadians = (degrees) => {
@@ -41,7 +42,7 @@ function NearbyOrdersPage() {
           .limit(10 * page)
           .get();
 
-        // Filter orders based on distance
+        // Filter orders based on distance and name
         const nearbyOrders = ordersSnapshot.docs
           .map((doc) => doc.data())
           .filter(
@@ -51,7 +52,7 @@ function NearbyOrdersPage() {
                 longitude,
                 order.location.sender_lat,
                 order.location.sender_lon
-              ) <= 400
+              ) <= 4 && order.receiver_address.includes(filter)
           );
 
         // Set the nearby orders in the state
@@ -84,7 +85,7 @@ function NearbyOrdersPage() {
     };
 
     fetchOrders();
-  }, [page]);
+  }, [page, filter]);
 
   const handleCall = (phoneNumber) => {
     // Implement the logic to initiate the call using the provided phone number
@@ -96,64 +97,64 @@ function NearbyOrdersPage() {
     setPage((prevPage) => prevPage + 1);
   };
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   const toRadians = (degrees) => {
     return degrees * (Math.PI / 180);
-    };
+  };
     
-    const calculateDistance1 = (lat1, lon1, lat2, lon2) => {
+  const calculateDistance1 = (lat1, lon1, lat2, lon2) => {
     const earthRadius = 6371; // Radius of the earth in kilometers
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
     const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-    Math.cos(toRadians(lat2)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance.toFixed(2); // Return the distance rounded to 2 decimal places
-    };
+  };
 
     return (
       <div className="container">
         <h2>Nearby Orders</h2>
     
-        {orders.length > 0 ? (
-          <>
-            {orders.map((order) => (
-              <div className="card" key={order.id}>
-                <p>Order ID: {order.to}</p>
-                <p>Receiver address: {order.receiver_address}</p>
-                <p>Sender phone: {order.sender_phone}</p>
-                <p>
-                  Distance:{' '}
-                  {calculateDistance1(
-                    order.location.sender_lat,
-                    order.location.sender_lon,
-                    order.location.receiver_lat || 0.00,
-                    order.location.receiver_lon || 0.00
-                  )}{' '}
-                  km
-                </p>
-                {/* Display other order details as needed */}
-                <button
-                  className="call-button"
-                  onClick={() => handleCall(order.sender_phone)}
-                >
-                  Call
-                </button>
-              </div>
-            ))}
-            {!loading && (
-              <button className="load-more-button" onClick={handleLoadMore}>
-                Load More
-              </button>
-            )}
-            {loading && <p>Loading...</p>}
-          </>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <label htmlFor="filter">Filter by name:</label>
+          <input
+            type="text"
+            id="filter"
+            value={filter}
+            onChange={handleFilterChange}
+          />
+        </form>
+    
+        {loading ? (
+          <p>Loading...</p>
         ) : (
-          <p className="empty-message">No nearby orders available</p>
+          <div>
+            {orders.length > 0 ? (
+              <ul>
+                {orders.map((order) => (
+                  <li key={order.orderId}>
+                    <h3>{order.receiver_address}</h3>
+                    <p>Distance: {calculateDistance1(order.location.receiver_lat, order.location.receiver_lon, order.location.sender_lat, order.location.sender_lon)} km</p>
+                    <button onClick={() => handleCall(order.phone_number)}>
+                      Call
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No nearby orders found.</p>
+            )}
+            <button onClick={handleLoadMore}>Load More</button>
+          </div>
         )}
       </div>
     );
