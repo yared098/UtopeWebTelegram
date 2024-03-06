@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { db } from "./firebase-config";
 
 function App() {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const snapshot = await db.collection('messages').get();
+      const messageList = snapshot.docs.map(doc => doc.data());
+      setMessages(messageList);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="card-container">
+        {messages.map((message, index) => (
+          <div className="card" key={index}>
+            <h3>From: {message["from-company"]}</h3>
+            <p>Phone Expected: {message["phone_expected"]}</p>
+            <p>Sender Phone: {message["sender_phone"]}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
