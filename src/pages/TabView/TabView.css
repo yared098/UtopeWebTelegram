@@ -1,0 +1,26 @@
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f0f0f0;
+    padding: 10px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  nav a:hover {
+    background-color: #ddd;
+  }
+  
+  nav a.active {
+    background-color: #aaa;
+    color: #fff;
+  }
+  
+  .tab-content {
+    margin-top: 20px;
+  }

@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-// import App from './App';
+import App from './App';
 // import RegistrationForm  from './pages/register/RegistrationForm'
 //login
 // import LoginPage  from './pages/Login/Loginpage'
 // nearby
-import NearbyOrdersPage  from './pages/NearBy/NearbyOrdersPage'
+// import NearbyOrdersPage  from './pages/NearBy/NearbyOrdersPage'
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
+    <App />
     {/* <RegistrationForm/> */}
-    <NearbyOrdersPage/>
+    {/* <NearbyOrdersPage/> */}
     {/* <LoginPage/> */}
   </React.StrictMode>
 );

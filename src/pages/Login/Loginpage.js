@@ -23,15 +23,33 @@ function LoginPage() {
     return () => unsubscribe();
   }, []);
 
+  // const fetchUserData = async () => {
+  //   try {
+  //     const userRef = await db.collection('driver_user').doc('YUYCBViJaybDl0xTzumG').get();
+  //     if (userRef.exists()) {
+  //       const userData = userRef.data();
+  //       console.log("user data is loading ....");
+  //       console.log(userData);
+  //       console.log("user data is ended ....")
+
+  //       setUserData(userData);
+  //     } else {
+  //       console.log('User not found.');
+  //       setUserData(null);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // };
   const fetchUserData = async () => {
     try {
       const userRef = await db.collection('driver_user').doc('YUYCBViJaybDl0xTzumG').get();
-      if (userRef.exists()) {
+      if (userRef.exists) {
         const userData = userRef.data();
-        console.log("user data is loading ....");
+        console.log("User data is loading....");
         console.log(userData);
-        console.log("user data is ended ....")
-
+        console.log("User data loading completed.");
+  
         setUserData(userData);
       } else {
         console.log('User not found.');
@@ -47,7 +65,7 @@ function LoginPage() {
 
     try {
       await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
-      await firebase.auth().signInWithEmailAndPassword(`${phone}@example.com`, 'password');
+      await firebase.auth().signInWithEmailAndPassword(`${phone}`, 'adadad');
       await firebase.auth().currentUser.getIdTokenResult(true); // Refresh the ID token to extend the session duration
     } catch (error) {
       console.error('Error logging in:', error);
@@ -94,7 +112,7 @@ function LoginPage() {
           <h2>Login</h2>
           <form onSubmit={handleLogin}>
             <label>
-              Phone:
+              Email:
               <input
                 type="text"
                 value={phone}
